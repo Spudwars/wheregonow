@@ -45,3 +45,4 @@ except ImportError:
 
 # Don't use Sentry logging even if configured for production
 LOGGING = BASE_LOGGING
+GA_TRACKING_CODE = ''

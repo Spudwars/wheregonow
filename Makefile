@@ -1,5 +1,5 @@
 MANAGE=python manage.py
-SETTINGS=--settings=skeletor.settings.test
+SETTINGS=--settings=places.settings.test
 
 .PHONY: all test coverage clean requirements
 

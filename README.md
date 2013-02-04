@@ -1,174 +1,57 @@
-## DJ Skeletor
+Hot Places
+==========
 
-DJ Skeletor is a skeleton Django project handy for bootstrapping new
-empty projects.
-
-The repository contains an empty, relocatable Django project with South,
-Django Debug Toolbar and Raven apps set, and with provisions for development,
-test and production settings.
+A Django project for Jon
 
 
-### Features
+First Time?
+-----------
+No virtualenv yet? get started here:
+  curl -s https://raw.github.com/brainsik/virtualenv-burrito/master/virtualenv-burrito.sh | $SHELL
 
-Comes with:
-
-  * South for database migrations
-  * Django Debug Toolbar for displaying extra information about your view excution
-  * Sentry client for logging exceptions (and custom logging)
-  * Fabric for easy deployment to remote servers
-  * Test-specific settings for running test with an in-memory SQLite database
-  * SQLite database configured in the default development settings
-  * Gunicorn integration for production
-  * Devserver integration for development
-  * Nosetests and coverage integration for testing
-  * Database auto-discovery via environment settings, compatible with Heroku
-
-DJ Skeletor requires Django 1.4 or later. All the other requirements are
-optional and can be disabled.
+add the following line to your ~/.bashrc:
+  source ${HOME}/.venvburrito/startup.sh
 
 
-### Quick setup
+Setup a new VirtualEnv, add the current directory to python path and install the package requirements:
+  cd hot-places
+  mkvirtualenv -a . -r requirements.txt hot-places
 
-    # prepare the virtual environment
-    mkvirtualenv --no-site-packages myenv
+Your virtualenv is now stored here:
+  ls ~/.virtualenvs/hot-places
 
-    # get the skeleton project
-    git clone https://github.com/senko/dj-skeletor.git myproject
-    cd myproject
+But the most important thing is that you can use the virtualenv as follows:
+  workon hot-places
 
-    # install requirements
-    make requirements
+Setup project
+-------------
 
-    # sanity test
-    make test
+  # Setup symlink
+  cd hot-places/places/settings/
+  ln -s dev.py local.py
 
-    # rename the project directory to reflect your project name
-    # don't forget to edit Makefile to reflect the correct project name
-    # in settings
-    git mv skeletor myproject && git commit -m 'renamed project'
+  # setup initial database
+  cd hot-places
+  python manage.py syncdb
+  # setup a root user/pass and remember it!
+  python manage.py migrate sentry
+  # Run project
+  python manage.py runserver
 
-    # activate dev environment
-    echo 'from .dev import *' > myproject/settings/local.py
-
-    # initialize the database
-    python manage.py syncdb
-    python manage.py migrate
-
-    # collect the static files needed by the apps
-    python manage.py collectstatic --noinput
-
-    # run it!
-    python manage.py runserver
+Test it works by browsing to 127.0.0.1:8000/admin/ and log in with you root username and password you created earlier.
 
 
-### Settings
 
-Settings are handled in the *settings* module:
+Thanks
+------
 
-  * settings.base - base/invariant project settings
-  * settings.dev - development environment
-  * settings.prod - production environment
-  * settings.test - test environment
-  * settings.local - local environment
+VirtualEnvWrapper install
+  https://github.com/brainsik/virtualenv-burrito
 
-If you're storing your environment settings in the repository, the easiest
-way to activate it on the server is to symlink settings/local.py to either
-prod or dev settings module.
+Quick start Django project
+  http://senko.net/en/django-quickstart-skeleton-project/#dj-skeletor-example
 
-If you like to keep the local settings out of the git repository, use dev.py
-or prod.py as a template and create your local.py as needed. The quick
-setup procedure and fabric setup tasks create a simple local.py that just
-imports everything from the development environment.
+HTML5 Mobile boilerplate
+  https://github.com/h5bp/mobile-boilerplate
 
-Test settings are separate to make it easier to customize settings for use
-when running unit tests. The default test settings use in-memory SQLite
-database and turn off South migrations and Sentry logging.
 
-### Django Debug Toolbar
-
-Django Debug Toolbar is set up so it's always visible in the dev
-environment, no matter what the client IP is, and always hidden in
-the production environment.
-
-### Database
-
-A simple sqlite3 database is configured in the development settings, so
-no additional configuration is needed to start hacking right away. South
-is used for schema migrations.
-
-The database filename used is 'dev.db' in the project root directory. It is
-explicitly ignored by git and fabric when rsyncing the local directory to server.
-
-In production, database settings autodiscovery is attempted using the
-dj_database_url module, by looking at the DATABASE_URL environment setting.
-This is the standard for Heroku deployments. If the autodiscovery fails,
-the entry falls back to hardcoded values in prod.py or (if it exists) local.py.
-
-### Sentry / Raven
-
-To use the Sentry client, you'll need a server to point it to. Installing
-Sentry server is easy as:
-
-    # mkvirtualenv --no-site-packages sentry-env
-    # pip install sentry
-    # sentry init
-    # sentry start
-
-You'll want to install Sentry into its own environment as it requires
-Django 1.2 or 1.3 at the moment.
-
-If you don't want to install Sentry yourself, you can use a hosted
-version at http://getsentry.com/.
-
-When you connect to your (or hosted) Sentry server and create a new project
-there, you'll be given Sentry DSN which you need to put into settings/base.py
-to activate Sentry logging.
-
-### Fabric
-
-A fabfile is provided with common tasks for rsyncing local directory to
-the server for use while developing the project, and for deploying the
-project using git clone/pull.
-
-Useful commands:
-
-  * server - host to connect to (same as -H, but accepts only one argument)
-  * env - virtualenv name on the server, as used with virtualenvwrapper/workon
-  * project_path - full path to the project directory on the server
-  * rsync - use rsync to copy the local folder to the project directory on the server
-  * setup - set up the project instance on the server (clones the origin
-    repository, creates a virtual environment, initialises the database and
-    runs the tests)
-  * deploy - deploy a new version of project on the server using git pull
-  * collecstatic, syncdb, migrate, runserver - run manage.py command
-  * update - combines collecstatic, syncdb, migrate
-  * test - run manage.py test with the test settings enabled
-
-For all the commands, run 'fab -l' or look at the source.
-
-#### Examples:
-
-Copy local directory to the server, update database and static files, and
-run tests (only files changed from last copy are going to be copied):
-
-    fab server:my.server.com env:myenv project_path:/path/to/project rsync update test
-
-Deploy a new instance of a project on a server ('myenv' will be newly created,
-code will be cloned into /path/to/project):
-
-    fab server:my.server.com env:myenv project_path:/path/to/project \
-        setup:origin=http://github.com/senko/dj-skeletor
-
-Deploy a new version of the project on the server (a new git tag will be
-created for each deployment, so it's easy to roll-back if needed):
-
-    fab server:my.server.com env:myenv project_path:/path/to/project deploy
-
-##### Customization
-
-Everyone has a slightly different workflow, so you'll probably want to
-customize the default fabric tasks or combine them. You can either customize
-fabfile.py and commit the changes to your repository, or you can create
-local_fabfile.py, which will be loaded if it exists. The latter can be useful
-if you have per-team-member fabric customizations you don't want to commit
-to the repository.

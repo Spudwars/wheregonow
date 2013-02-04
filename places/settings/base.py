@@ -4,13 +4,14 @@ import os.path
 
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 PROJECT_NAME = os.path.basename(ROOT_DIR)
-
+AUTH_PROFILE_MODULE = 'places.UserProfile'
+ACCOUNT_ACTIVATION_DAYS = 10
 
 def ABS_PATH(*args):
     return os.path.join(ROOT_DIR, *args)
 
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+    ('Chris Jesse', 'jesse1932@gmail.com'),
 )
 
 MANAGERS = ADMINS
@@ -22,11 +23,11 @@ MANAGERS = ADMINS
 # timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = 'America/Chicago'
+TIME_ZONE = 'Europe/London'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en-gb'
 
 SITE_ID = 1
 
@@ -127,15 +128,17 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
-    # 'django.contrib.admindocs',
-
-    # Uncomment to enable South for database migrations:
     'south',
+    'profiles',
+    'registration',
 
     # Uncomment to enable exception logging using Sentry; you also need
     # to set SENTRY_DSN below
+    'sentry',
     'raven.contrib.django',
+    
+    # My Apps
+    'places',
 )
 
 # Get the SENTRY_DSN from your project settings page in Sentry (either self
