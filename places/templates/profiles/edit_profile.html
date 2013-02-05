@@ -1,48 +1,19 @@
 {% extends "base.html" %}
-{% load thumbnail %}
+{# Implement sorl.thumbnail? load thumbnail #}
 
 
 {% block title %}Edit Profile{% endblock %}
 
-{% block extrahead %}
-{# Bring in jquery-ui and its theme #}
-<link type="text/css" href="{{STATIC_URL}}js/jquery-ui/css/eggplant/jquery-ui-1.8rc1.custom.css" rel="Stylesheet" />	
-<script type="text/javascript" src="{{STATIC_URL}}js/jquery-ui/js/jquery-ui-1.8rc1.custom.min.js"></script>
-
-<script type="text/javascript">
-$(document).ready(function() {
-
-	jQuery("#formatting").dialog({
-	      bgiframe: true, autoOpen: false, height: 570, width: 550, modal: false
-	    });
-	
-	jQuery("#adding_media").dialog({
-	      bgiframe: true, autoOpen: false, height: 500, width: 650, modal: false
-	    });	
-});
-</script>
-
-{# form.media #}  {# -- js for tinymce #}
-<script type="text/javascript" src="/static/js/tiny_mce/tiny_mce.js"></script>
-	
-{% endblock %}
-
-{% block main %}
-
-{# Hidden divs - revealed by jquery dialog #}
-
-<div id="adding_media" title="Adding images and video">
-	{% include 'media_instr.html' %}
-</div>
+{% block content %}
 
 
 {% if form.errors %}
-	<ul id="messagelist">
-		<p>The following required fields are missing:</p>
-		{% for error in form.errors %}
-		<li class="error">{{ error }}</li>
-		{% endfor %}
-	</ul>
+<ul id="messagelist">
+	<p>The following required fields are missing:</p>
+	{% for error in form.errors %}
+	<li class="error">{{ error }}</li>
+	{% endfor %}
+</ul>
 {% endif %}
 
 
