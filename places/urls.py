@@ -13,6 +13,10 @@ urlpatterns = patterns('',
          #}),
     url(r'^profiles/', include('profiles.urls')),
     url(r'^accounts/', include('registration.backends.default.urls')),
+    
+    url(r'', include('social_auth.urls')),  #All django-social-auth URLs names have socialauth_ prefix.
+
+
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
