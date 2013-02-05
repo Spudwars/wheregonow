@@ -38,15 +38,16 @@ class Place(models.Model):
     
 
 class Vote(models.Model):
-    user = models.ForeignKey(User, related_name='votes')
     place = models.ForeignKey(Place)
+    user = models.ForeignKey(User, related_name='votes')
     ratio = models.IntegerField(default=50, 
-                    help_text='Only Men 1, 25, 50, 75, 99  Only Women')
-    hotness = models.IntegerField(default=0)
+                    help_text='Only Men | 1%, 25%, 50%, 75%, 99% | Only Women')
+    hotness = models.IntegerField(default=50,
+                    help_text='Minger | 0%, 25%, 50%, 75%, 100% | Hot')
     
     def __unicode__(self):
-        return ' '.join(('%s' % x for x in \
-                         (self.user, self.place, self.ratio, self.hotness)))
+        return '%s: %d%% women %d%% hot (%s)' % (
+            self.place, self.ratio, self.hotness, self.user)
     
     
 class VoteVerification(models.Model):
