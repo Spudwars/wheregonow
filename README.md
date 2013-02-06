@@ -1,11 +1,22 @@
-Hot Places
+WhereGoNow
 ==========
 
 A Django project for Jon
 
 
-First Time?
------------
+Clone Repository
+----------------
+Windows: You can install "GitHub for Windows" and use the "Clone in Windows" button on github.com
+
+Over SSH (after having saved your SSH key in your github profile):
+  git clone git@github.com:Spudwars/wheregonow.git
+
+Over HTTP (provide your username and password each time):
+  git clone https://github.com/Spudwars/wheregonow.git
+
+
+VirtualEnv
+----------
 No virtualenv yet? get started here:
   curl -s https://raw.github.com/brainsik/virtualenv-burrito/master/virtualenv-burrito.sh | $SHELL
 
@@ -14,24 +25,25 @@ add the following line to your ~/.bashrc:
 
 
 Setup a new VirtualEnv, add the current directory to python path and install the package requirements:
-  cd hot-places
-  mkvirtualenv -a . -r requirements.txt hot-places
+  cd wheregonow
+  mkvirtualenv -a . -r requirements.txt wheregonow
 
 Your virtualenv is now stored here:
-  ls ~/.virtualenvs/hot-places
+  ls ~/.virtualenvs/wheregonow
 
 But the most important thing is that you can use the virtualenv as follows:
-  workon hot-places
+  workon wheregonow
 
 Setup project
 -------------
 
+  workon wheregonow
   # Setup symlink
-  cd hot-places/places/settings/
+  cd wheregonow/places/settings/
   ln -s dev.py local.py
 
   # setup initial database
-  cd hot-places
+  cd wheregonow
   python manage.py syncdb
   # setup a root user/pass and remember it!
   python manage.py migrate sentry
