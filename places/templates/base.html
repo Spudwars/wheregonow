@@ -50,14 +50,22 @@
 	{% block container %}
             <div id="header">
 	    {% block header %}
+		{% if messages %}
+		    <ul class="messages">
+		    {% for message in messages %}
+			<li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+		    {% endfor %}
+		    </ul>
+		    <hr />
+		{% endif %}
 		<a href="{% url home %}">{% trans "Home" %}</a> | 
 	
 		{% if user.is_authenticated %}
-		{% trans "Logged in" %}: {{ user.username }} 
-		(<a href="{% url auth_logout %}">{% trans "Log out" %}</a> | 
-		<a href="{% url auth_password_change %}">{% trans "Change password" %}</a>)
+			{% trans "Logged in" %}: {{ user.username }} 
+			(<a href="{% url auth_logout %}">{% trans "Log out" %}</a> | 
+			<a href="{% url auth_password_change %}">{% trans "Change password" %}</a>)
 		{% else %}
-		<a href="{% url auth_login %}">{% trans "Log in" %}</a>
+			<a href="{% url auth_login %}">{% trans "Log in" %}</a>
 		{% endif %}
 		<hr />
 	    {% endblock %}
@@ -78,6 +86,8 @@
 
         <script src="js/vendor/zepto.min.js"></script>
         <script src="js/helper.js"></script>
+	{% block script %}
+	{% endblock %}
 
         <!-- Google Analytics -->
 	{% googleanalytics %}
