@@ -19,6 +19,8 @@ class UserProfile(models.Model):
     sex = models.CharField(max_length=10, blank=True, choices=SEX_CHOICES)
     preference = models.CharField(max_length=10, blank=True, 
                                   choices=PREFERENCE_CHOICES)
+    city = models.CharField(max_length=100, blank=True)
+    country = models.CharField(max_length=100, blank=True)
 
     def __unicode__(self):
         return '%s (%s)' % (self.user, self.sex)
