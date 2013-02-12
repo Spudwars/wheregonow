@@ -1,11 +1,27 @@
-from django.conf import settings
-from django.contrib.auth.models import Group, User
-from django.core.urlresolvers import reverse
+#from django.conf import settings
+from django.contrib.auth.models import User
+#from django.core.urlresolvers import reverse
 from django.db import models
-from django.db.models import F, Max, Q, connection
-from django.template import RequestContext, Template, defaultfilters as filters
-from django.template.context import Context
+#from django.db.models import F, Max, Q, connection
+#from django.template import RequestContext, Template, defaultfilters as filters
+#from django.template.context import Context
 
+
+##class CustomUserManager(models.Manager):
+    ##def create_user(self, username, email):
+        ##return self.model._default_manager.create(username=username)
+
+
+##class CustomUser(models.Model):
+    ### Define a custom User class to work with django-social-auth
+    ##username = models.CharField(max_length=128)
+    ##last_login = models.DateTimeField(blank=True, null=True)
+
+    ##objects = CustomUserManager()
+
+    ##def is_authenticated(self):
+        ##return True
+    
 
 class UserProfile(models.Model):
     SEX_CHOICES = (('male', 'Male'),
