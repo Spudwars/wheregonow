@@ -66,7 +66,11 @@ When running locally you need to simulate wheregonow.com in your hosts file (`/e
     127.0.0.1 wheregonow.com
 
 Now you can access http://wheregonow.com:8000/
-    
+
+Although you now need to launch runserver using port 80, so you'll need superuser rights:
+
+    sudo ~/.virtualenvs/wheregonow/bin/python manage.py runserver wheregonow.com:80
+        
 
 Thanks
 ------
