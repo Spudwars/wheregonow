@@ -148,6 +148,7 @@ INSTALLED_APPS = (
     'profiles',
     'registration',
     'social_auth',
+    'tastypie',
     
     # Uncomment to enable exception logging using Sentry; you also need
     # to set SENTRY_DSN below

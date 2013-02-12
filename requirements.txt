@@ -8,9 +8,11 @@ django-profiles
 django-registration
 django-sentry
 django-social-auth
+django-tastypie
 dj-database-url
 fabric
 gunicorn
 nose
+python-google-places
 raven
 south
