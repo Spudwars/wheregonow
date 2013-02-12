@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+
+<p>These are the hot places</p>
+
+<button onclick="locate()">Locate Me</button>
+<div id="support"></div>
+<div id="divStatus"></div>
+<div id="map_canvas" style="width:600px;height:400px;"></div>
+
+{% endblock %}
+
+{% block script %}
+<script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
+
+<script language="javascript">
+  var startPos;
+  var map;
+
+  function locate()
+  {
+    if(navigator.geolocation)
+    {
+  document.getElementById("support").innerHTML = "<p style='color:green'>Great! This browser supports HTML5 Geolocation</p>";
+      navigator.geolocation.getCurrentPosition(updateLocation,handleLocationError,{timeout:50000});
+  //navigator.geolocation.watchPosition(updateCurrPosition,handleLocationError);
+
+    }
+    else
+    {
+      document.getElementById("support").innerHTML = "<p style='color:red'>Oops! This browser does not support HTML5 Geolocation</p>";
+    }
+  }
+
+ function updateLocation(position)
+ {
+   startPos = position;
+   var latitude = position.coords.latitude;
+   var longitude = position.coords.longitude;
+
+   //document.getElementById("startLat").innerHTML = latitude;
+   //document.getElementById("startLon").innerHTML = longitude;
+
+   var coords = new google.maps.LatLng(latitude,longitude);
+
+   var mapOptions = { zoom:10,
+                      center:coords,
+                      mapTypeControl:false,
+                      navigationControlOptions:{style:google.maps.NavigationControlStyle.SMALL},
+                      mapTypeId:google.maps.MapTypeId.ROADMAP
+                    };
+
+  map = new google.maps.Map(document.getElementById("map_canvas"),mapOptions);
+
+  var marker = new google.maps.Marker({ position:coords,
+                                map:map,
+                                        title:"Your current location!"
+                                       });
+
+ }
+
+ function handleLocationError(error)
+ {
+   switch(error.code)
+   {
+     case 0:
+      updateStatus("There was an error while retrieving your location: " + error.message);
+     break;
+
+     case 1:
+      updateStatus("The user prevented this page from retrieving the location.");
+      break;
+
+     case 2:
+      updateStatus("The browser was unable to determine your location: " + error.message);
+
+      break;
+
+     case 3:
+
+      updateStatus("The browser timed out before retrieving the location.");
+
+      break;
+   }
+ }
+
+ function updateStatus(msg)
+ {
+  document.getElementById("divStatus").innerHTML = msg;
+ }
+
+</script>
+
+{% endblock %}
