@@ -58,6 +58,8 @@ class Place(models.Model):
 class Vote(models.Model):
     place = models.ForeignKey(Place)
     user = models.ForeignKey(User, related_name='votes')
+    created = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
     ratio = models.IntegerField(default=50, 
                     help_text='Only Men | 1%, 25%, 50%, 75%, 99% | Only Women')
     hotness = models.IntegerField(default=50,
