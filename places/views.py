@@ -1,16 +1,26 @@
-from django.conf import settings
-from django.contrib.auth.decorators import login_required, permission_required
+#from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth import logout as auth_logout
+from django.contrib.auth.decorators import login_required #, permission_required
+from django.contrib.messages.api import get_messages
 from django.core.urlresolvers import reverse
-from django.db import connection
-from django.db.models import Count
-from django.db.models.aggregates import Min
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render_to_response, redirect
+#from django.db import connection
+#from django.db.models import Count
+#from django.db.models.aggregates import Min
+from django.http import HttpResponseRedirect #HttpResponse, 
+from django.shortcuts import render_to_response #, redirect
 from django.template import RequestContext
 from django.views.generic.simple import direct_to_template
 
 from social_auth import __version__ as social_auth_version
-from social_auth.utils import setting
+#from social_auth.utils import setting
+
+from places.models import Vote
+from places.forms import VoteForm
+
+def page_not_found(request):
+    return direct_to_template(request, '404.html')
+
 
 def home(request):
     """Home view, displays login mechanism"""
@@ -21,12 +31,53 @@ def home(request):
                                   RequestContext(request))
 
 
-def page_not_found(request):
-    return direct_to_template(request, '404.html')
-  
+def hot_places(request):
+    '''
+    '''
+    return render_to_response('content/hot-places.html', {},
+                              RequestContext(request))
+
+
 @login_required
-def view_profile(request):
-    user_profile = request.user.get_profile()
+def vote(request, id=None):
+    '''
+    User can vote via POST - and edit their votes
+    '''
+    form_args = {}
+    if id is not None:
+        # edit an existing Yazilar
+        try:
+            vote = Vote.objects.get(pk=id)
+        except Vote.DoesNotExist:
+            return Http404('Existing vote %d not found' % id)
+        form_args['instance'] = vote
+    # else create new vote
+
+    if request.POST:
+        # save form
+        form_args['data'] = request.POST
+        vote_form = VoteForm(**form_args)
+        if vote_form.is_valid():
+            vote = vote_form.save(commit=True)
+            messages.success(request, 'Thanks for voting!')
+    else:
+        vote_form = VoteForm(**form_args)
+
+    return render_to_response('content/vote.html',
+        {
+            'vote_form': vote_form
+        },
+        context_instance=RequestContext(request)
+    )
+
+def logged_in(request):
+    '''
+    once logged in, for now we'll take them to the main page
+    '''
+    return HttpResponseRedirect(reverse(hot_places))
+#@login_required
+#def view_profile(request):
+    #user_profile = request.user.get_profile()
     
 
 
@@ -34,7 +85,7 @@ def view_profile(request):
 def done(request):
     """Login complete view, displays user data"""
     ctx = {
-        'version': version,
+        'version': social_auth_version,
         'last_login': request.session.get('social_auth_last_login_backend')
     }
     return render_to_response('social_auth/done.html', ctx, RequestContext(request))

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+
+<form method="post" action="">
+{% csrf_token %}
+<ul>
+    {{ vote_form.as_ul }}
+</ul>
+<input type="submit" value="Submit Form"/>
+</form>
+
+{% endblock %}

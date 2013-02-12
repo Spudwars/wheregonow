@@ -1,12 +1,17 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.contrib import admin
 
-from places.forms import ProfileForm
+#from places.forms import ProfileForm
+from places.views import home, done, hot_places, logged_in, logout, error, close_login_popup, vote #form, form2, 
+from places.facebook import facebook_view
+from places.api.google_places import VenuesResource
+
+venues_resource = VenuesResource()
 
 admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^$', 'places.views.home', name='home'),
+    url(r'^$', home, name='home'),
     #url('^profiles/edit', 'profiles.views.edit_profile', 
         #{'form_class': ProfileForm,
          ##'success_url':'/my/custom/url',
