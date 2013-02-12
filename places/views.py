@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 #from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import logout as auth_logout
@@ -5,7 +7,7 @@ from django.contrib.auth.decorators import login_required #, permission_required
 from django.contrib.messages.api import get_messages
 from django.core.urlresolvers import reverse
 #from django.db import connection
-#from django.db.models import Count
+from django.db.models import Avg, Count #, Sum
 #from django.db.models.aggregates import Min
 from django.http import HttpResponseRedirect #HttpResponse, 
 from django.shortcuts import render_to_response #, redirect
@@ -15,7 +17,7 @@ from django.views.generic.simple import direct_to_template
 from social_auth import __version__ as social_auth_version
 #from social_auth.utils import setting
 
-from places.models import Vote
+from places.models import Place, Vote
 from places.forms import VoteForm
 
 def page_not_found(request):
@@ -34,7 +36,10 @@ def home(request):
 def hot_places(request):
     '''
     '''
-    return render_to_response('content/hot-places.html', {},
+    newer_than = datetime.now() - timedelta(days=10)  # recent votes only
+    hot_places = Place.objects.filter(vote__created__gte=newer_than).annotate(heat=Avg('vote__hotness'), vote_count=Count('vote')).order_by('-heat')[:10]
+    return render_to_response('content/hot-places.html', 
+                              {'hot_places': hot_places},
                               RequestContext(request))
 
 
@@ -42,6 +47,9 @@ def hot_places(request):
 def vote(request, id=None):
     '''
     User can vote via POST - and edit their votes
+    
+    TODO: Page where user can see recent votes to edit their score
+    TODO: Disallow more than one vote per place per hour
     '''
     form_args = {}
     if id is not None:
@@ -58,7 +66,9 @@ def vote(request, id=None):
         form_args['data'] = request.POST
         vote_form = VoteForm(**form_args)
         if vote_form.is_valid():
-            vote = vote_form.save(commit=True)
+            vote = vote_form.save(commit=False)  # wait until we've added user
+            vote.user = request.user
+            vote.save()
             messages.success(request, 'Thanks for voting!')
     else:
         vote_form = VoteForm(**form_args)

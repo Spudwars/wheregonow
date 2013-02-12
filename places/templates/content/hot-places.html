@@ -6,6 +6,25 @@
 
 <p>These are the hot places</p>
 
+<table data-role="table" id="my-table" data-mode="reflow">
+  <thead>
+    <tr>
+      <th>Heat</th>
+      <th>Place</th>
+      <th>Number of Votes</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for place in hot_places %}
+    <tr>
+      <th>{{ place.heat }}%</th>
+      <td><a href="/place/{{ place.id }}">{{ place.name }}</a></td>
+      <td>{{ place.vote_count }}</td>
+    </tr>
+  {% endfor %}
+    </tbody>
+</table>
+
 <button onclick="locate()">Locate Me</button>
 <div id="support"></div>
 <div id="divStatus"></div>
